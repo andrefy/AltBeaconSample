@@ -38,9 +38,9 @@
 #import "GCDSingleton.h"
 #import "EasedValue.h"
 
-#define DEBUG_CENTRAL NO
-#define DEBUG_PERIPHERAL NO
-#define DEBUG_PROXIMITY NO
+#define DEBUG_CENTRAL YES
+#define DEBUG_PERIPHERAL YES
+#define DEBUG_PROXIMITY YES
 
 #define UPDATE_INTERVAL 1.0f
 #define PROCESS_PERIPHERAL_INTERVAL 2.0f
@@ -353,9 +353,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
-    if (DEBUG_CENTRAL)
-        NSLog(@"did discover peripheral: %@, data: %@, %1.2f", [peripheral.identifier UUIDString], advertisementData, [RSSI floatValue]);
-
+    if (DEBUG_CENTRAL) {
+        NSLog(@"did discover peripheral: %@, data: %@, RSSI %1.2f", [peripheral.identifier UUIDString], advertisementData, [RSSI floatValue]);
+        NSLog(@"RSSI %1.2f", [RSSI floatValue]);
+    }
 
     @synchronized (self) {
         NSMutableArray *lastValues = [peripheralDetected objectForKey:[[peripheral.identifier UUIDString] uppercaseString]];
@@ -378,9 +379,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-    if (DEBUG_CENTRAL)
+    if (DEBUG_CENTRAL) {
         NSLog(@"-- central state changed: %@", centralManager.stateString);
-
+    }
+    
     if (central.state == CBCentralManagerStatePoweredOn) {
         [self startScanning];
     }
@@ -390,6 +392,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
 #pragma mark -
 
 - (NSMutableDictionary *)calculateRanges {
+    NSLog(@"AltBeacon calculateRanges");
     NSMutableDictionary *res = [[NSMutableDictionary alloc] init];
     @synchronized (self) {
         NSArray *keys = [uuidsDetected allKeys];
@@ -436,13 +439,14 @@ didDiscoverCharacteristicsForService:(CBService *)service
 }
 
 - (void)reportRangesToDelegates:(NSTimer *)timer {
+    NSLog(@"reportRangesToDelegates");
     [self performBlockOnDelegates:^(id <AltBeaconDelegate> delegate) {
 
 
-        for (NSString *peripheralKey in peripheralUUIDSMatching) {
-            NSMutableArray *ranges = [peripheralDetected objectForKey:peripheralKey];
-            NSString *uuid = [peripheralUUIDSMatching objectForKey:peripheralKey];
-            [uuidsDetected setObject:ranges forKey:uuid];
+        for (NSString *peripheralKey in self->peripheralUUIDSMatching) {
+            NSMutableArray *ranges = [self->peripheralDetected objectForKey:peripheralKey];
+            NSString *uuid = [self->peripheralUUIDSMatching objectForKey:peripheralKey];
+            [self->uuidsDetected setObject:ranges forKey:uuid];
 
         }
 
@@ -454,9 +458,9 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }                    complete:^{
         @synchronized (self) {
 
-            NSArray *keys = [peripheralDetected allKeys];
+            NSArray *keys = [self->peripheralDetected allKeys];
             for (NSString *key in keys) {
-                NSMutableArray *lastValues = [peripheralDetected objectForKey:key];
+                NSMutableArray *lastValues = [self->peripheralDetected objectForKey:key];
                 [lastValues addObject:[NSNumber numberWithFloat:-205]];
             }
         }
@@ -485,22 +489,25 @@ didDiscoverCharacteristicsForService:(CBService *)service
 }
 
 - (BOOL)hasBluetooth {
+    NSLog(@"hasBluetooth");
     return [self canBroadcast] && peripheralManager.state == CBPeripheralManagerStatePoweredOn;
 }
 
 - (void)startAuthorizationTimer {
+    NSLog(@"startAuthorizationTimer");
     authorizationTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self
                                                         selector:@selector(checkBluetoothAuth:)
                                                         userInfo:nil repeats:YES];
 }
 
 - (void)checkBluetoothAuth:(NSTimer *)timer {
+    NSLog(@"hasBluetooth");
     if (bluetoothIsEnabledAndAuthorized != [self hasBluetooth]) {
 
         bluetoothIsEnabledAndAuthorized = [self hasBluetooth];
         [self performBlockOnDelegates:^(id <AltBeaconDelegate> delegate) {
             if ([delegate respondsToSelector:@selector(service:bluetoothAvailable:)])
-                [delegate service:self bluetoothAvailable:bluetoothIsEnabledAndAuthorized];
+                [delegate service:self bluetoothAvailable:self->bluetoothIsEnabledAndAuthorized];
         }];
     }
 }

@@ -50,7 +50,6 @@
     NSLog(@"viewDidLoad");
 
     // Do any additional setup after loading the view from its nib.
-
     self.didStartAltBOne=NO;
     self.didStartAltBTwo=NO;
     self.didStartAltBThree=NO;
@@ -72,7 +71,7 @@
 }
 
 - (IBAction)StartStopAltBOne:(id)sender {
-
+    NSLog(@"StartStopAltBOne");
     // Whe the user press one of the buttons then that beacon will start searching for anotherone
     if (self.didStartAltBOne) {
         self.didStartAltBOne = NO;
@@ -97,7 +96,7 @@
 }
 
 - (IBAction)StartStopAltBTwo:(id)sender {
-
+    NSLog(@"StartStopAltBTwo");
     if (self.didStartAltBTwo) {
         self.didStartAltBTwo = NO;
         [self setTitleButton:@"Start AltBeacon 2" andButton: self.BtnAltBTwo];
@@ -123,7 +122,7 @@
 }
 
 - (IBAction)StartStopAltThree:(id)sender {
-
+    NSLog(@"StartStopAltThree");
     if (self.didStartAltBThree) {
         self.didStartAltBThree = NO;
         [self setTitleButton:@"Start AltBeacon 3" andButton: self.BtnAltBthree];
@@ -147,7 +146,7 @@
 }
 
 - (void) setTitleButton:(NSString *)title andButton:(UIButton*)button {
-
+    NSLog(@"setTitleButton");
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateSelected];
     [button setTitle:title forState:UIControlStateHighlighted];
@@ -160,14 +159,15 @@
 }
 
 - (void)start:(AltBeacon *)beacon {
-
+    NSLog(@"start broadcasting");
     // start broadcasting
     [beacon startBroadcasting];
     [beacon startDetecting];
 }
 
 - (void)stop:(AltBeacon *)beacon {
-
+    NSLog(@"stopBroadcasting");
+    NSLog(@"stopDetecting");
     // start broadcasting
     [beacon stopBroadcasting];
     [beacon stopDetecting];
@@ -175,9 +175,11 @@
 
 
 - (NSString*) convertToString:(NSNumber *)number {
+    NSLog(@"convertToString");
     NSString *result = nil;
 
     switch(number.intValue) {
+        NSLog(@"number value %d", number.intValue);
         case INDetectorRangeFar:
             result = @"Up to 100 meters";
             break;
@@ -197,8 +199,9 @@
 
 // Delegate methods
 - (void)service:(AltBeacon *)service foundDevices:(NSMutableDictionary *)devices {
-
+    NSLog(@"foundDevices");
     for(NSString *key in devices) {
+        NSLog(@"device found key %@", key);
         NSNumber * range = [devices objectForKey:key];
         if (range.intValue == INDetectorRangeUnknown){
             if ([key  isEqualToString:kUuidBeaconOne]){

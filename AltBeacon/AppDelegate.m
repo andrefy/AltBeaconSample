@@ -1,11 +1,3 @@
-//
-//  AppDelegate.m
-//  AltBeacon
-//
-//  Created by Estela Pochintesta on 5/11/14.
-//
-//
-
 #import "AppDelegate.h"
 #import "demoViewController.h"
 

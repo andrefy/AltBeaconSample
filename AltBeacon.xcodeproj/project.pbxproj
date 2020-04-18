@@ -351,7 +351,7 @@
 		6AF69B20191FD7B800123BAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1140;
 				TargetAttributes = {
 					6AF69B6E191FDE9300123BAF = {
 						DevelopmentTeam = 3WE5XMQXX5;
@@ -368,11 +368,11 @@
 			};
 			buildConfigurationList = 6AF69B23191FD7B800123BAF /* Build configuration list for PBXProject "AltBeacon" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 6AF69B1F191FD7B800123BAF;
 			productRefGroup = 6AF69B70191FDE9300123BAF /* Products */;
@@ -481,6 +481,7 @@
 		6AF69B24191FD7B800123BAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -515,6 +516,7 @@
 		6AF69B25191FD7B800123BAF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
